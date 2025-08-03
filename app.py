@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Loading the model and scaler
+# Loading the model and loading the scaler
 model = joblib.load("/Users/vignesh/Downloads/Paris Housing Price Prediction/price_model.pkl")
 scaler = joblib.load("/Users/vignesh/Downloads/Paris Housing Price Prediction/scaler.pkl")
 
