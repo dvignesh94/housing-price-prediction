@@ -1,13 +1,10 @@
-# streamlit_app.py
-
 import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-from pathlib import Path
 
 # --- Custom feature engineering function ---
-# IMPORTANT: Replace the logic below with the same one you used when training.
+# IMPORTANT: Replace with the exact same logic you used when training
 def add_engineered_features(df):
     """
     Adds engineered features to the dataframe.
@@ -27,26 +24,25 @@ st.set_page_config(
 
 st.title("🏠 Paris Housing Price Predictor")
 
-# --- Artifact Loading ---
-ARTIFACT_DIR = Path("/Users/vignesh/Downloads/artifacts")
-MODEL_PATH = joblib.load("price_model.pkl")
-FEATURES_PATH = joblib.load("feature_cols.pkl")
-PREPROCESSOR_PATH = joblib.load("preprocessor.pkl")
+# --- Load files directly from repository ---
+MODEL_FILE = "price_model.pkl"
+FEATURES_FILE = "feature_cols.pkl"
+PREPROCESSOR_FILE = "preprocessor.pkl"
 
 @st.cache_resource
-def load_artifacts():
+def load_files():
     """
-    Loads the model, feature list, and preprocessor from disk.
+    Loads the model, feature list, and preprocessor directly from the project directory.
     """
-    model = joblib.load(MODEL_PATH)
-    feature_cols = joblib.load(FEATURES_PATH)
-    preprocessor = joblib.load(PREPROCESSOR_PATH)
+    model = joblib.load(MODEL_FILE)
+    feature_cols = joblib.load(FEATURES_FILE)
+    preprocessor = joblib.load(PREPROCESSOR_FILE)
     return model, feature_cols, preprocessor
 
 try:
-    model, feature_cols, preprocessor = load_artifacts()
+    model, feature_cols, preprocessor = load_files()
 except Exception as e:
-    st.error(f"Failed to load artifacts. Please ensure the 'artifacts' folder with all required files exists.\nError: {e}")
+    st.error(f"Failed to load model files. Ensure they are present in the repository.\nError: {e}")
     st.stop()
 
 # --- User Input Form ---
@@ -106,11 +102,10 @@ if submit:
 
 # --- Diagnostics Expander ---
 with st.expander("Diagnostics"):
-    st.write("Artifacts Directory Exists:", ARTIFACT_DIR.exists())
-    st.write("Model Path Exists:", MODEL_PATH.exists())
-    st.write("Preprocessor Path Exists:", PREPROCESSOR_PATH.exists())
-    st.write("Feature List Path Exists:", FEATURES_PATH.exists())
+    st.write("Model File Found:", Path(MODEL_FILE).exists())
+    st.write("Feature List File Found:", Path(FEATURES_FILE).exists())
+    st.write("Preprocessor File Found:", Path(PREPROCESSOR_FILE).exists())
     if 'aligned_df' in locals():
-        st.write("Input Dataframe sent to model:")
+        st.write("Input DataFrame sent to model:")
         st.dataframe(aligned_df)
     st.write("Features expected by the model:", feature_cols)
